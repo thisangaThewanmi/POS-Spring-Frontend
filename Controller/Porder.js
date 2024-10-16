@@ -7,9 +7,7 @@ $(document).ready(function(){
 
 });
 
-$('#btnPlaceOrder').on('click', () => {
-    console.log("place order btn eka ebuwa")
-});
+
 
 const itemCartArray = [];
 
@@ -306,43 +304,46 @@ $("#btnAddItem").on('click', () => {
     });
 
 
-    function updateItemQty(){
-
-        var itemId = $('#O-itemID').val();
-
-        var itemName = $('#O-itemName').val();
-
-        var itemQty =$('#O-itemQty').val(itemQty);
-
-        var itemPrice =$('#O-itemPrice').val(itemQty);
 
 
 
+
+    function updateItemQty() {
+
+        var itemId = $('#O-itemID').val();        // Get the item ID
+        var itemName = $('#O-itemName').val();    // Get the item name
+        var itemQty = $('#O-itemQty').val();      // Get the item quantity
+        var itemPrice = $('#O-itemPrice').val();  // Get the item price
+        var broughtQty = $('#O-orderQty').val();
+
+        var finalItemQty = itemQty - broughtQty;
+
+        // Construct the item object
         const item = {
             id: itemId,
             name: itemName,
-            qty: itemQty,
+            qty: finalItemQty,
             price: itemPrice
-
         };
 
+        // Convert the item object to JSON format
         const jsonItem = JSON.stringify(item);
-        console.log("jsonObject:" + item);
+        console.log("jsonObject:", jsonItem);   // Log the JSON object
 
-
+        // Perform the AJAX request
         $.ajax({
-            url: "http://localhost:8080/api/v1/item/" + itemId,
+            url: "http://localhost:8080/api/v1/item/" + itemId,  // PUT request to update item
             type: "PUT",
-            data: jsonItem,
-            headers: {"Content-Type": "application/json"},
+            data: jsonItem,  // Send JSON data
+            headers: {"Content-Type": "application/json"},  // Set headers to JSON
             success: function (results) {
-                console.log(results)
-                alert('Item updated successfully...')
-                loadItemTable()
+                console.log(results);  // Log the response from the server
+                alert('Item updated successfully...');
+                loadItemTable();  // Reload the table with updated data
             },
             error: function (error) {
-                console.log(error)
-                alert('Item update failed......')
+                console.log(error);  // Log any error response
+                alert('Item update failed...');
             }
         });
     }
@@ -377,6 +378,62 @@ $("#btnAddItem").on('click', () => {
             $("#item-cart-tablebody").append(record);
         }
     }
+
+
+    $('#btnPlaceOrder').on('click', () => {
+        console.log("place order btn eka ebuwa")
+
+
+
+        var orderId = $("#orderID").val();
+        var orderDate = $("#orderDate").val();
+        var customerId = $("#orderCusId").val();
+        var customerName =$("#orderCusName").val();
+        console.log("cusname"+customerName);
+        var total = $('#totalPriceLabel').text();
+        var discount = $('#discount').val();
+        var subtotal =     $('#subTotalPriceLabel').text();
+
+
+        const order = {
+            orderId: orderId,
+            orderDate: orderDate,
+            customerId: customerId,
+            customerName: customerName,
+            total:total,
+            discount:discount,
+            subtotal:subtotal
+
+        };
+
+        console.log(order.customerName);
+
+
+        const jsonCustomer = JSON.stringify(order);
+        console.log("jsonObject:" + order);
+
+
+        $.ajax({
+            url: "http://localhost:8080/api/v1/order",
+            type: "POST",
+            data: jsonCustomer,
+            headers: {"Content-Type": "application/json"},
+            success: function (results) {
+                console.log(results)
+                alert('Order saved successfully...')
+                loadTable()
+            },
+            error: function (error) {
+                console.log(error)
+                alert('Order not saved...')
+            }
+        });
+
+
+
+
+    });
+
 
 
 
