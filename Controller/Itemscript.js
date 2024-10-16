@@ -174,7 +174,8 @@ $(document).ready(function() {
                     var record = `
                         <tr>
                             <td class="item-id-value">${item.code}</td>
-                            <td class="item-name-value">${item.name}</td>
+                 
+                           <td class="item-name-value">${item.name}</td>
                             <td class="item-qty-value">${item.qty}</td>
                             <td class="item-price-value">${item.price}</td>
                         </tr>
